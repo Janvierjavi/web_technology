@@ -1,0 +1,44 @@
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </head>
+  <body style = "margin-left:20%;font-size:30px;margin-right:20%;background-color:lightgreen">
+    <h1>web technology task</h1>
+    <% require 'pg' %>
+    <% connection = PG::connect(dbname:"goya") %>
+    <% connection.internal_encoding = "UTF-8" %>
+​
+    <form action="indicate.cgi" method="POST">
+       Please enter the letters below<br><br>
+      <input type="text"  name="input" >
+      <input type="submit" name="submit" style="background:green;color:white;border-radius:10%;border:none;height:30px;width:70px">
+    </form>
+    <% result = connection.exec("select date, weight, give_for from crops
+     where not give_for='‘自家消費';") %>
+    <% date = [] %>
+    <% result.each do |record| %>
+      <%  date << "Size of bitter gourd: #{record ["weight"]} Sold to: #{record ["give_for"]}" %>
+    <% end %>
+    <form action="goya.cgi" method="POST">
+       Click the button below to skip in the size of the bitter gourd and information page of the buyer<br><br>
+       <!-- change by trougth out the data you want to send for value -->
+       <!-- Make name = "goya" a mark of information -->
+      <input type="text" name="goya" value ="<%= date.join(' ') %>">
+      <input type="submit" name="submit" style="background:green;color:white;border-radius:10%;border:none;height:30px;width:70px" >
+    </form>
+    <% result1 = connection.exec("select date, weight, give_for from crops
+     where quality ='false';") %>
+    <% date = [] %>
+    <% result1.each do |record| %>
+      <%  date << "bitter when quality is false: #{record ["weight"]} Sold to: #{record ["give_for"]}" %>
+    <% end %>
+    <form action="goya1.cgi" method="POST">
+       Click the button down to see where quality is false<br><br>
+       <!-- Substitute the data you want to send for value -->
+       <!-- Make name = "goya1" a mark of information -->
+      <input type="text" name="goya1" value ="<%= date.join(' ') %>">
+      <input type="submit" name="submit" style="background:green;color:white;border-radius:10%;border:none;height:30px;width:70px" >
+    </form>
+  </body>
+</html>
